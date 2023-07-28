@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -17,6 +18,7 @@ import javax.validation.constraints.Size;
 
 
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Table(name = User.USERS)
@@ -45,5 +47,8 @@ public class User {
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date creationDate;
 	
+	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true, fetch = FetchType.LAZY)
+	@JoinColumn(name = "password_id")
+	Password pwd;
 	
 }

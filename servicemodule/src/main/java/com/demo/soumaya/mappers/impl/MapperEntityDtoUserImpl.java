@@ -19,6 +19,9 @@ public class MapperEntityDtoUserImpl implements IMapperEntityDto<User, UserDto>{
 		
 		UserDto d = new UserDto();
 		BeanUtils.copyProperties(e, d);
+		if(e.getPwd() != null) {
+			d.setPassword(e.getPwd().getPassword());
+		}
 		return d;
 		
 		
@@ -34,4 +37,13 @@ public class MapperEntityDtoUserImpl implements IMapperEntityDto<User, UserDto>{
 		return e;
 	}
 
+	
+	public void mapDtoEntity(UserDto d, User e) {
+		if(d == null)
+			return;
+		BeanUtils.copyProperties(d, e);
+		if(d.getPassword() != null) {
+			e.getPwd().setPassword(d.getPassword());
+		}
+	}
 }

@@ -1,11 +1,21 @@
 package com.demo.soumaya.servicees;
 
-import com.demo.soumaya.common.dto.UserDetailsDto;
+
+
+import java.util.List;
+
 import com.demo.soumaya.common.dto.UserDto;
+import com.demo.soumaya.exceptions.UserException;
 
 public interface IUserService {
 	
-	 UserDto createUser(UserDetailsDto userDetailsDto);
+	 UserDto createUser(final UserDto userDto) throws UserException;
 	 
-	 UserDto loadUser(Long id);
+	 UserDto loadUser(final Long id) throws UserException;
+	 
+	 List<UserDto> loadUsers() throws UserException;
+	 
+	 UserDto updateUser(final UserDto userDto) throws UserException;
+	 
+	 void deleteUser(final Long id) throws UserException;
 }
