@@ -1,0 +1,4 @@
+com\demo\soumaya\mappers\IMapperEntityDto.class
+com\demo\soumaya\servicees\impl\UserServiceImpl.class
+com\demo\soumaya\servicees\IUserService.class
+com\demo\soumaya\mappers\impl\MapperEntityDtoUserImpl.class

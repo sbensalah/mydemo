@@ -1,0 +1,4 @@
+com\demo\soumaya\common\dto\UserDto.class
+com\demo\soumaya\common\core\repositories\IUserRepository.class
+com\demo\soumaya\common\dto\UserDetailsDto.class
+com\demo\soumaya\common\core\entities\User.class
