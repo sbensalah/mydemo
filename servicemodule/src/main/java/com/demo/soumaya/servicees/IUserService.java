@@ -13,9 +13,15 @@ public interface IUserService {
 	 
 	 UserDto loadUser(final Long id) throws UserException;
 	 
+	 UserDto loadUserByLogin(final String login) throws UserException;
+	 
+	 List<UserDto> loadUsersByLogin(final String login) throws UserException;
+	 
 	 List<UserDto> loadUsers() throws UserException;
 	 
 	 UserDto updateUser(final UserDto userDto) throws UserException;
 	 
 	 void deleteUser(final Long id) throws UserException;
+	 
+	 List<UserDto> loadUsersByFilter(Long filterId) throws UserException;	 
 }

@@ -22,19 +22,55 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 @Service
 public class UserServiceImpl implements IUserService {
 
-	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
 	public static final int LENGTH = 5;
+	
+	public static final String PERCENT = "%";
 
 	@Autowired
 	private IUserRepository userRepository;
 
 	@Autowired
 	private IMapperEntityDto<User, UserDto> mapperEntityDto;
+
+	
+	 public List<UserDto> loadUsersByLogin(final String login) throws UserException {
+			if ((login == null) || StringUtils.isBlank(login)) {
+				throw new UserException("login is empty");
+			}
+			String label = PERCENT + login + PERCENT;
+			List<UserDto> usersDto = userRepository.findAllByLoginLikeIgnoreCase(label).stream().map(u -> mapperEntityDto.mapEntityToDto(u))
+					.collect(Collectors.toList());
+			
+		 return usersDto;
+	 }
+	public UserDto loadUserByLogin(final String login) throws UserException {
+		if ((login == null) || StringUtils.isBlank(login)) {
+			throw new UserException("login is empty");
+		}
+		String label = PERCENT + login + PERCENT;
+		Optional<User> oUser = userRepository.findByLoginLikeIgnoreCase(label);
+		if (!oUser.isPresent()) {
+			String msg = String.format("no user with login [%s] ", login);
+			throw new UserException(msg);
+		}
+		User u = oUser.get();
+
+		return mapperEntityDto.mapEntityToDto(u);
+	}
+
+	public List<UserDto> loadUsersByFilter(Long filterId) throws UserException {
+		if (filterId == null) {
+			throw new UserException("no filter id informed ");
+		}
+
+		List<UserDto> usersDto = StreamSupport.stream(userRepository.findAll().spliterator(), false)
+				.filter(e -> e.getId() > filterId).map(e -> mapperEntityDto.mapEntityToDto(e))
+				.collect(Collectors.toList());
+		return usersDto;
+	}
 
 	public UserDto loadUser(final Long id) throws UserException {
 		if (id == null) {
@@ -66,11 +102,8 @@ public class UserServiceImpl implements IUserService {
 			u.setPwd(pwd);
 		}
 		User createdUser = userRepository.save(u);
-		UserDto createdUserDto = mapperEntityDto.mapEntityToDto(createdUser);
-		if (createdUser.getPwd() != null) {
-			createdUserDto.setPassword(createdUser.getPwd().getPassword());
-		}
-		return createdUserDto;
+
+		return mapperEntityDto.mapEntityToDto(createdUser);
 	}
 
 	private User checkUserExistanceById(final Long id) throws UserException {
@@ -101,11 +134,12 @@ public class UserServiceImpl implements IUserService {
 			userRepository.deleteById(id);
 		}
 	}
-	
-	 public List<UserDto> loadUsers() throws UserException{
-		 List<User> listUser = StreamSupport.stream(userRepository.findAll().spliterator(), false).collect(Collectors.toList());
-		 List<UserDto> listUserDto = listUser.stream().map(u -> mapperEntityDto.mapEntityToDto(u)).collect(Collectors.toList());
-		 return listUserDto;
-	 }
+
+	public List<UserDto> loadUsers() throws UserException {
+		List<UserDto> usersDto = StreamSupport.stream(userRepository.findAll().spliterator(), false)
+				.map(u -> mapperEntityDto.mapEntityToDto(u)).collect(Collectors.toList());
+
+		return usersDto;
+	}
 
 }
